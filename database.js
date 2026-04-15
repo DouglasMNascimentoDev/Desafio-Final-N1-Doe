@@ -14,12 +14,12 @@ const criarBanco = async () => {
     //Criando as tabelas do banco de dados
 
     await db.exec(`
-        CREATE TABLE IF usuarios(
+        CREATE TABLE IF NOT EXISTS usuarios(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nome TEXT,                                                                           --E-mail do usuário
+            nome TEXT,                                                                          
             telefone TEXT,
             email TEXT,                                   
-            data_cadastro TEXT                                
+            data_cadastro TEXT,                                
             tipo_usuario TEXT DEFAULT 'doador'               
             
         
@@ -50,7 +50,7 @@ const criarBanco = async () => {
             id_ponto INTEGER REFERENCES pontosColeta(id_ponto),
             tipo_item TEXT,
             quantidade_desejada INTEGER,
-            quantidade_atual INTEGER DEFAULT 0,
+            quantidade_atual INTEGER DEFAULT 0
         )
         `);
         
@@ -84,7 +84,89 @@ const criarBanco = async () => {
 
     } else {
         console.log(`Banco pronto com ${checagem.total} de usuarios`);
-    }   
+    }
+    
+    const checPontos = await db.get(`SELECT COUNT (*) AS total FROM pontosColeta`)
+
+    if (checPontos.total ===0) {
+        await db.exec(`INSERT INTO pontosColeta(nome_ponto, endereco, cidade, status_necessidade) VALUES
+        ("Escola Municipal Nossa Senhora Aparecida", "Rua da Aparecida", "Valença", "média"),
+        ("UBS - Centro", "Rua dos Mineiros", "Valença", "baixa"),
+        ("Prefeitura Municipal de Valença", "Rua Dr. Figueiredo", "Valença", "alta"),
+        ("Colégio Estadual Theodorico Fonseca", "Praça Visconde do Rio Preto", "Valença", "média")
+        
+        
+        
+            `);
+    } else {
+        console.log(`Banco pronto com ${checPontos.total} de pontos de coleta`);
+    }
+
+    const checItens = await db.get(`SELECT COUNT (*) AS total FROM itensNecessarios`)
+
+    if (checItens.total ===0) {
+        await db.exec(`INSERT INTO itensNecessarios(tipo_item, quantidade_desejada, quantidade_atual) VALUES
+        ("Agasalho", 300, 50),
+        ("Pacote de arroz", 400, 250),
+        ("Água mineral", 1000, 900),
+        ("Camisa", 500, 500),
+        ("Caixa de leite", 1000, 500),
+        ("Pacote de feijão", 800, 150),
+        ("Bermuda", 500, 400),
+        ("Pacote de macarrão", 1000, 300),
+        ("Calçado", 5000, 2500),
+        ("Chinelo", 5000, 4000),
+        ("Cobertor", 1000, 190)       
+         
+            
+            `);
+    } else {
+        console.log(`Banco pronto com ${checItens.total} de itens necessários`);
+    }
+
+    const checDoacoes = await db.get(`SELECT COUNT (*) AS total FROM doacoes`)
+
+    if (checDoacoes.total ===0) {
+        await db.exec(`INSERT INTO doacoes(tipo_item, quantidade, data_doacao) VALUES
+        ("Água mineral", 50, "24/01/2026"),
+        ("Agasalho", 5, "24/01/2026"),
+        ("Pacote de arroz", 10, "10/02/2026"),
+        ("Cobertor", 3, "10/02/2026"),
+        ("Pacote de macarrão", 50, "10/02/2026")    
+            
+            
+            
+            `);
+    } else {
+        console.log(`Banco pronto com ${checDoacoes.total} doações`)
+    }
+
+
+
+    //Select - R do CRUD - READ
+
+    const pontoEspecifico = await db.all(`SELECT * FROM pontosColeta WHERE nome_ponto = "UBS - Centro"`);
+    console.table(pontoEspecifico);
+
+    //UPDATE
+
+    await db.run(`
+        UPDATE pontosColeta
+        SET status_necessidade = "media"
+        WHERE nome_ponto = "UBS - Centro"
+        
+        
+        `);
+
+
+    //DELETE
+    
+    await db.run(`DELETE FROM pontosColeta WHERE id = 2`);
+    console.log("O registro do ID 2 foi removido");
+
+    return db;
+
+
         
 
 
@@ -99,4 +181,4 @@ const criarBanco = async () => {
 
 };
 
-criarBanco();
+module.exports = {criarBanco}
