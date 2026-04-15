@@ -70,18 +70,20 @@ const criarBanco = async () => {
 
     //Insert - C do CRUD - CREATE
 
-    const checagen = await db.get(`SELECT COUNT (*) AS total FROM usuarios`);
+    const checagem = await db.get(`SELECT COUNT (*) AS total FROM usuarios`)
 
     if (checagem.total ===0) {
         await db.exec(`
             INSERT INTO usuarios(nome, telefone, email, data_cadastro, tipo_usuario) VALUES
             ("José Carlos", "24 999987796", "josecarlos@email.com", "24/01/2026", "Doador"),
             ("Maria Rita", "24 998759561", "mrita@email.com", "23/02/2026", "Voluntário"),
-            ("Renato", "24 988561234", "ricardo@email.com", "20/01/2026", "Administrador")
+            ("Renato Silva", "24 988561234", "renato@email.com", "20/01/2026", "Administrador"),
+            ("Roberto Carlos", "24 997784567", "rcarlos@email.com", "10/02/2026", "Doador"),
+            ("Luciana Silveira", "24 998554321", "lusilveira@email.com", "05/03/2026", "Voluntário")
             `);
 
     } else {
-        console.log
+        console.log(`Banco pronto com ${checagem.total} de usuarios`);
     }   
         
 
@@ -95,6 +97,6 @@ const criarBanco = async () => {
 
 
 
-}
+};
 
 criarBanco();
