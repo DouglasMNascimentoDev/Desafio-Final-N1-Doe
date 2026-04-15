@@ -37,7 +37,7 @@ const criarBanco = async () => {
             nome_ponto TEXT,                                 
             endereco TEXT,                                   
             cidade TEXT,                                     
-            status_necessidade, TEXT DEFAULT 'media'         
+            status_necessidade TEXT DEFAULT 'media'         
         
         ) 
                
@@ -105,18 +105,18 @@ const criarBanco = async () => {
     const checItens = await db.get(`SELECT COUNT (*) AS total FROM itensNecessarios`)
 
     if (checItens.total ===0) {
-        await db.exec(`INSERT INTO itensNecessarios(tipo_item, quantidade_desejada, quantidade_atual) VALUES
-        ("Agasalho", 300, 50),
-        ("Pacote de arroz", 400, 250),
-        ("Água mineral", 1000, 900),
-        ("Camisa", 500, 500),
-        ("Caixa de leite", 1000, 500),
-        ("Pacote de feijão", 800, 150),
-        ("Bermuda", 500, 400),
-        ("Pacote de macarrão", 1000, 300),
-        ("Calçado", 5000, 2500),
-        ("Chinelo", 5000, 4000),
-        ("Cobertor", 1000, 190)       
+        await db.exec(`INSERT INTO itensNecessarios(id_ponto, tipo_item, quantidade_desejada, quantidade_atual) VALUES
+        (1, "Agasalho", 300, 50),
+        (2, "Pacote de arroz", 400, 250),
+        (3, "Água mineral", 1000, 900),
+        (4, "Camisa", 500, 500),
+        (4, "Caixa de leite", 1000, 500),
+        (3, "Pacote de feijão", 800, 150),
+        (1, "Bermuda", 500, 400),
+        (2, "Pacote de macarrão", 1000, 300),
+        (4, "Calçado", 5000, 2500),
+        (3, "Chinelo", 5000, 4000),
+        (2, "Cobertor", 1000, 190)       
          
             
             `);
@@ -127,12 +127,12 @@ const criarBanco = async () => {
     const checDoacoes = await db.get(`SELECT COUNT (*) AS total FROM doacoes`)
 
     if (checDoacoes.total ===0) {
-        await db.exec(`INSERT INTO doacoes(tipo_item, quantidade, data_doacao) VALUES
-        ("Água mineral", 50, "24/01/2026"),
-        ("Agasalho", 5, "24/01/2026"),
-        ("Pacote de arroz", 10, "10/02/2026"),
-        ("Cobertor", 3, "10/02/2026"),
-        ("Pacote de macarrão", 50, "10/02/2026")    
+        await db.exec(`INSERT INTO doacoes(id_usuario, id_ponto, tipo_item, quantidade, data_doacao) VALUES
+        (1, 1, "Água mineral", 50, "24/01/2026"),
+        (1, 3, "Agasalho", 5, "24/01/2026"),
+        (4, 3, "Pacote de arroz", 10, "10/02/2026"),
+        (4, 1, "Cobertor", 3, "10/02/2026"),
+        (4, 2, "Pacote de macarrão", 50, "10/02/2026")    
             
             
             

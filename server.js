@@ -43,3 +43,26 @@ app.get("/pontosColeta/:id", async (req, res) => {
 
 //Rota POST - Para novos registros/Endpoints
 
+app.post("/pontosColeta", async (req, res) => {
+    const {nome_ponto, endereco, cidade, status_necessidade} = req.body
+
+    const db = await criarBanco()
+
+    await db.run(`INSERT INTO pontosColeta(nome_ponto, endereco, cidade, status_necessidade) VALUES (?, ?, ?, ?)`, [nome_ponto, endereco, cidade, status_necessidade])
+
+    res.send(`Novo ponto de coleta registrado: ${nome_ponto}`)
+})
+
+
+
+
+
+//Porta do servidor
+
+//Criando uma variavel inteligente para a porta
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`Servidor rodando em http://Localhost:${PORT}`)
+});
