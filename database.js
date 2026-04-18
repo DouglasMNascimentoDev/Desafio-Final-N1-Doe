@@ -1,6 +1,7 @@
 const sqlite3 = require('sqlite3')
 const {open} = require('sqlite')
 
+
 const criarBanco = async () => {
 
     const db = await open({
@@ -11,6 +12,8 @@ const criarBanco = async () => {
     })
 
 
+db.run('PRAGMA foreign_keys = ON');    
+
     //Criando as tabelas do banco de dados
 
     await db.exec(`
@@ -18,7 +21,7 @@ const criarBanco = async () => {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome TEXT,                                                                          
             telefone TEXT,
-            email TEXT,                                   
+            email TEXT,                                
             data_cadastro TEXT,                                
             tipo_usuario TEXT DEFAULT 'doador'               
             
@@ -47,21 +50,24 @@ const criarBanco = async () => {
     await db.exec(`
         CREATE TABLE IF NOT EXISTS itensNecessarios(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            id_ponto INTEGER REFERENCES pontosColeta(id_ponto),
+            id_ponto INTEGER,
             tipo_item TEXT,
             quantidade_desejada INTEGER,
-            quantidade_atual INTEGER DEFAULT 0
+            quantidade_atual INTEGER DEFAULT 0,
+            FOREIGN KEY (id_ponto) REFERENCES pontosColeta(id)
         )
         `);
         
     await db.exec(`
         CREATE TABLE IF NOT EXISTS doacoes(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            id_usuario INTEGER REFERENCES usuarios(id_usuario),
-            id_ponto INTEGER REFERENCES pontosColeta(id_ponto),
+            id_usuario INTEGER,
+            id_ponto INTEGER,
             tipo_item TEXT,
             quantidade INTEGER,
-            data_doacao TEXT
+            data_doacao TEXT,
+            FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
+            FOREIGN KEY (id_ponto) REFERENCES pontosColeta(id) 
         )
         `);
 
@@ -132,7 +138,7 @@ const criarBanco = async () => {
         (1, 3, "Agasalho", 5, "24/01/2026"),
         (4, 3, "Pacote de arroz", 10, "10/02/2026"),
         (4, 1, "Cobertor", 3, "10/02/2026"),
-        (4, 2, "Pacote de macarrão", 50, "10/02/2026")    
+        (4, 4, "Pacote de macarrão", 50, "10/02/2026")    
             
             
             
@@ -157,12 +163,12 @@ const criarBanco = async () => {
         
         
         `);
-
+    console.log('A necessidade de doações do ponto de coleta foi alterada');    
 
     //DELETE
     
-    await db.run(`DELETE FROM pontosColeta WHERE id = 2`);
-    console.log("O registro do ID 2 foi removido");
+    await db.run(`DELETE FROM usuarios WHERE id = 2`);
+    console.log("O usuário do ID 2 foi removido");
 
     return db;
 

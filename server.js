@@ -55,6 +55,36 @@ app.post("/pontosColeta", async (req, res) => {
 
 
 
+app.put("/pontosColeta/:id", async (req, res) => {
+    const {id} = req.params;
+
+    const {status_necessidade} = req.body;
+
+    const db = await criarBanco()
+
+    await db.run(`
+        UPDATE pontosColeta
+        SET status_necessidade = ?
+        WHERE id = ?`, [status_necessidade, id]     
+        
+        )
+
+        res.send(`A necessidade do ponto de coleta ${id} foi atualizada com sucesso`)
+})
+
+
+//Rota de remoção
+
+app.delete("/pontosColeta/:id", async (req, res) => {
+    const {id} = req.params;
+
+    const db =await criarBanco()
+
+    await db.run(`
+        DELETE FROM pontosColeta WHERE id = ?`, [id])
+
+        res.send(`O ponto de coleta ${id} foi removido com sucesso`)
+})
 
 
 //Porta do servidor
