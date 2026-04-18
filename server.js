@@ -1,8 +1,12 @@
 const express = require('express')
 const {criarBanco} = require('./database')
 
+const cors = require('cors')
+
 
 const app = express()
+
+app.use(cors())
 
 app.use(express.json())
 
@@ -13,6 +17,7 @@ app.get('/', (req, res) => {
         <body>
             <h1>Doe</h1>
             <h2>Gestão de doações e pontos de coletas</2>
+            <p>Endpoint que lista os pontos de coletas cadastrados: /pontosColeta</p>
         </body>    
         
         `)
@@ -26,6 +31,30 @@ app.get('/pontosColeta', async (req, res) => {
 
     res.json(listaPontos)
 });
+
+app.get('/usuarios', async (req, res) => {
+    const db = await criarBanco()
+
+    const listaUsuarios = await db.all(`SELECT * FROM usuarios`)
+
+    res.json(listaUsuarios)
+});
+
+app.get('/doacoes', async (req, res) => {
+    const db = await criarBanco()
+
+    const listaDoacoes = await db.all(`SELECT * FROM doacoes`)
+
+    res.json(listaDoacoes)
+})
+
+app.get('/itensNecessarios', async (req, res) => {
+    const db = await criarBanco()
+
+    const listaItens = await db.all(`SELECT * FROM itensNecessarios`)
+
+    res.json(listaItens)
+})
 
 
 //Rota Específica
@@ -53,6 +82,38 @@ app.post("/pontosColeta", async (req, res) => {
     res.send(`Novo ponto de coleta registrado: ${nome_ponto}`)
 })
 
+app.post('/usuarios', async (req, res) => {
+    const {nome, telefone, email, data_cadastro, tipo_usuario} = req.body
+
+    const db = await criarBanco()
+
+    await db.run(`INSERT INTO usuarios(nome, telefone, email, data_cadastro, tipo_usuario) VALUES (?, ?, ?, ?, ?)`, [nome, telefone, email, data_cadastro, tipo_usuario])
+
+    res.send(`Novo usuário registrado: ${nome}`)
+})
+
+app.post('/doacoes', async (req, res) => {
+    const {id_usuario, id_ponto, tipo_item, quantidade, data_doacao} = req.body
+
+    const db = await criarBanco()
+
+    await db.run(`INSERT INTO doacoes(id_usuario, id_ponto, tipo_item, quantidade, data_doacao)`, [id_usuario, id_ponto, tipo_item, quantidade, data_doacao])
+
+    res.send(`Nova doação registrada: ${tipo_item} Quantidade: ${quantidade}`)
+})
+
+app.post('/itensNecessarios', async (req, res) => {
+    const {id_ponto, tipo_item, quantidade_desejada, quantidade_atual} = req.body
+
+    const db = await criarBanco()
+
+    await db.run(`INSERT INTO itensNecessarios(id_ponto, tipo_item, quantidade_desejada, quantidade_atual)`, [id_ponto, tipo_item, quantidade_desejada, quantidade_atual])
+
+    res.send()
+})
+
+
+//Rota para atualizar
 
 
 app.put("/pontosColeta/:id", async (req, res) => {
@@ -86,7 +147,6 @@ app.delete("/pontosColeta/:id", async (req, res) => {
         res.send(`O ponto de coleta ${id} foi removido com sucesso`)
 })
 
-
 //Porta do servidor
 
 //Criando uma variavel inteligente para a porta
@@ -96,3 +156,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor rodando em http://Localhost:${PORT}`)
 });
+
