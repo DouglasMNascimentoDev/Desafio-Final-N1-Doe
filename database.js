@@ -54,7 +54,7 @@ db.run('PRAGMA foreign_keys = ON');
             tipo_item TEXT,
             quantidade_desejada INTEGER,
             quantidade_atual INTEGER DEFAULT 0,
-            FOREIGN KEY (id_ponto) REFERENCES pontosColeta(id)
+            FOREIGN KEY (id_ponto) REFERENCES pontosColeta(id) ON DELETE CASCADE
         )
         `);
         
@@ -66,8 +66,8 @@ db.run('PRAGMA foreign_keys = ON');
             tipo_item TEXT,
             quantidade INTEGER,
             data_doacao TEXT,
-            FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
-            FOREIGN KEY (id_ponto) REFERENCES pontosColeta(id) 
+            FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE,
+            FOREIGN KEY (id_ponto) REFERENCES pontosColeta(id) ON DELETE CASCADE
         )
         `);
 
