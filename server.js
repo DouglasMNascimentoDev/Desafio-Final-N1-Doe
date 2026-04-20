@@ -17,7 +17,6 @@ app.get('/', (req, res) => {
         <body>
             <h1>Doe</h1>
             <h2>Gestão de doações e pontos de coletas</2>
-            <p>Endpoint que lista os pontos de coletas cadastrados: /pontosColeta</p>
         </body>    
         
         `)
