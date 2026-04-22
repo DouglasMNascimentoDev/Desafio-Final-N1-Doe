@@ -82,15 +82,6 @@ app.post('/usuarios', async (req, res) => {
     res.send(`Novo usuário registrado: ${nome}`)
 })
 
-app.post('/doacoes', async (req, res) => {
-    const {id_usuario, id_ponto, tipo_item, quantidade, data_doacao} = req.body
-
-    const db = await criarBanco()
-
-    await db.run(`INSERT INTO doacoes(id_usuario, id_ponto, tipo_item, quantidade, data_doacao) VALUES (?, ?, ?, ?, ?)`, [id_usuario, id_ponto, tipo_item, quantidade, data_doacao])
-
-    res.send(`Nova doação registrada: ${tipo_item} Quantidade: ${quantidade}`)
-})
 
 //Rota para atualizar
 
@@ -127,6 +118,7 @@ app.put("/usuarios/:id", async (req, res) => {
 
     res.send(`O tipo do usuário ${id} foi atualizado`)
 })
+
 
 
 //Rota de remoção
