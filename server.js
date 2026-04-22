@@ -47,15 +47,6 @@ app.get('/doacoes', async (req, res) => {
     res.json(listaDoacoes)
 })
 
-app.get('/itensNecessarios', async (req, res) => {
-    const db = await criarBanco()
-
-    const listaItens = await db.all(`SELECT * FROM itensNecessarios`)
-
-    res.json(listaItens)
-})
-
-
 //Rota Específica
 
 app.get("/pontosColeta/:id", async (req, res) => {
@@ -96,21 +87,10 @@ app.post('/doacoes', async (req, res) => {
 
     const db = await criarBanco()
 
-    await db.run(`INSERT INTO doacoes(id_usuario, id_ponto, tipo_item, quantidade, data_doacao)`, [id_usuario, id_ponto, tipo_item, quantidade, data_doacao])
+    await db.run(`INSERT INTO doacoes(id_usuario, id_ponto, tipo_item, quantidade, data_doacao) VALUES (?, ?, ?, ?, ?)`, [id_usuario, id_ponto, tipo_item, quantidade, data_doacao])
 
     res.send(`Nova doação registrada: ${tipo_item} Quantidade: ${quantidade}`)
 })
-
-app.post('/itensNecessarios', async (req, res) => {
-    const {id_ponto, tipo_item, quantidade_desejada, quantidade_atual} = req.body
-
-    const db = await criarBanco()
-
-    await db.run(`INSERT INTO itensNecessarios(id_ponto, tipo_item, quantidade_desejada, quantidade_atual)`, [id_ponto, tipo_item, quantidade_desejada, quantidade_atual])
-
-    res.send()
-})
-
 
 //Rota para atualizar
 
@@ -129,7 +109,23 @@ app.put("/pontosColeta/:id", async (req, res) => {
         
         )
 
-        res.send(`A necessidade do ponto de coleta ${id} foi atualizada com sucesso`)
+        res.send(`A necessidade de doações do ponto de coleta ${id} foi atualizada com sucesso`)
+})
+
+app.put("/usuarios/:id", async (req, res) => {
+    const {id} = req.params;
+
+    const {tipo_usuario} = req.body;
+
+    const db = await criarBanco()
+
+    await db.run(`
+        UPDATE usuarios
+        SET tipo_usuario = ?
+        WHERE id = ?`, [tipo_usuario, id]
+    )
+
+    res.send(`O tipo do usuário ${id} foi atualizado`)
 })
 
 
@@ -138,12 +134,23 @@ app.put("/pontosColeta/:id", async (req, res) => {
 app.delete("/pontosColeta/:id", async (req, res) => {
     const {id} = req.params;
 
-    const db =await criarBanco()
+    const db = await criarBanco()
 
     await db.run(`
         DELETE FROM pontosColeta WHERE id = ?`, [id])
 
-        res.send(`O ponto de coleta ${id} foi removido com sucesso`)
+    res.send(`O ponto de coleta ${id} foi removido com sucesso`)
+})
+
+app.delete("/usuarios/:id", async (req, res) => {
+    const {id} = req.params;
+
+    const db = await criarBanco()
+
+    await db.run(`
+        DELETE FROM usuarios WHERE id = ?`, [id])
+    
+    res.send(`O usuário ${id} foi removido com sucesso`)    
 })
 
 //Porta do servidor
