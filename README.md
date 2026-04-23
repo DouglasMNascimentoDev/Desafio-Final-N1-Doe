@@ -240,7 +240,7 @@ Isso evita ataques de SQL Injection.
 
 ## 📚 Conceitos
 
-- CRUD (Create, Read, Uldate e Delete)
+- CRUD (Create, Read, Update e Delete)
 - Rotas com Express
 - Métodos/Verbos HTTP
 
