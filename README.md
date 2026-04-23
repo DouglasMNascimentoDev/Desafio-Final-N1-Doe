@@ -247,7 +247,8 @@ Isso evita ataques de SQL Injection.
 
 ## 👩‍💻 Autor
 
-Douglas Menezes do Nascimento - 2026
+Douglas Menezes do Nascimento - 2026.
+
 Projeto desenvolvido para o projeto final do módulo Back-End.  
 
 ---
