@@ -29,7 +29,7 @@ git clone https://github.com/DouglasMNascimentoDev/Desafio-Final-N1-Doe
 # Acesse a pasta do projeto
 
 ```bash
-cd doe
+cd Desafio-Final-N1-Doe
 ```
 # Instale as dependências
 
